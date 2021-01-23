@@ -1,14 +1,12 @@
 import React from "react";
 import PlantList from "./PlantList";
-import { PLANTS } from "../data/plants-data";
+import { useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "./CustomHeaderButton";
 
 const FavoritesScreen = (props) => {
-  // Dummy Data
-  const favPlants = PLANTS.filter(
-    (plant) => plant.id === "3" || plant.id === "4"
-  );
+  const favPlants = useSelector((state) => state.plants.favoritePlants);
+
   return <PlantList listItems={favPlants} navigation={props.navigation} />;
 };
 

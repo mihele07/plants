@@ -1,13 +1,23 @@
-import React, { useState } from "react";
-import { Text, View } from "react-native";
-import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+import React from "react";
 import { enableScreens } from "react-native-screens";
+import { createStore, combineReducers } from "redux";
+import { Provider } from "react-redux";
 
 import PlantsNavigator from "./navigation/PlantsNavigator";
+import plantsReducer from "./redux/reducers/plants";
 
 enableScreens();
 
+const rootReducer = combineReducers({
+  plants: plantsReducer,
+});
+
+const store = createStore(rootReducer);
+
 export default function App() {
-  return <PlantsNavigator />;
+  return (
+    <Provider store={store}>
+      <PlantsNavigator />
+    </Provider>
+  );
 }

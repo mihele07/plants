@@ -1,20 +1,30 @@
-import React from "react";
-import {
-  ScrollView,
-  Image,
-  Button,
-  View,
-  Text,
-  StyleSheet,
-} from "react-native";
+import React, { useEffect, useCallback } from "react";
+import { ScrollView, Image, View, Text, StyleSheet } from "react-native";
+
 import { PLANTS } from "../data/plants-data";
+import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../components/CustomHeaderButton";
+import { toggleFavorite } from "../redux/actions/ActionCreators";
 
 const PlantDetailScreen = (props) => {
+  const availablePlants = useSelector((state) => state.plants.plants);
+
   const plantId = props.navigation.getParam("plantId");
 
-  const selectedPlant = PLANTS.find((plant) => plant.id === plantId);
+  const selectedPlant = availablePlants.find((plant) => plant.id === plantId);
+
+  const dispatch = useDispatch();
+
+  const toggleFavoriteHandler = useCallback(() => {
+    dispatch(toggleFavorite(plantId));
+  }, [dispatch, plantId]);
+
+  useEffect(() => {
+    // props.navigation.setParams({ mealTitle: selectedPlant.title });
+    props.navigation.setParams({ toggleFav: toggleFavoriteHandler });
+  }, [toggleFavoriteHandler]);
+
   return (
     <ScrollView style={styles.main}>
       <Image source={selectedPlant.image} style={styles.image} />
@@ -52,8 +62,10 @@ const PlantDetailScreen = (props) => {
 };
 
 PlantDetailScreen.navigationOptions = (navigationData) => {
-  const plantId = navigationData.navigation.getParam("plantId");
-  const selectedPlant = PLANTS.find((plant) => plant.id === plantId);
+  // const plantId = navigationData.navigation.getParam("plantId");
+  // const plantTitle = navigationData.navigation.getParam("plantTitle");
+  const toggleFavorite = navigationData.navigation.getParam("toggleFav");
+  // const selectedPlant = PLANTS.find((plant) => plant.id === plantId);
   return {
     headerTitle: selectedPlant.name,
     headerRight: (
@@ -62,7 +74,7 @@ PlantDetailScreen.navigationOptions = (navigationData) => {
           title="Favorite"
           iconName="ios-star"
           onPress={() => {
-            console.log("Mark as favorite");
+            console.log = { toggleFavorite };
           }}
         />
       </HeaderButtons>
